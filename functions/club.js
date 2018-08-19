@@ -51,6 +51,13 @@ const club = async clubId => {
 
   const [, , venueLine1, , venueLine2, , address] = location
 
+  const [latitude, longitude] =
+    R.compose(
+      R.map(Number),
+      R.split(','),
+      R.replace('https://maps.google.com/maps?daddr=', '')
+    )($('a:contains("Get Directions")').attr('href'))
+
   return {
     id: clubId,
     name,
@@ -65,7 +72,9 @@ const club = async clubId => {
     meetingTimes,
     venueLine1,
     venueLine2,
-    address
+    address,
+    latitude,
+    longitude
   }
 }
 
