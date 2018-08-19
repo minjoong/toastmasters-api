@@ -4,6 +4,7 @@ const express = require('express')
 const logger = require('morgan')
 // routers
 const districtApi = require('./routers/district.router')
+const clubApi = require('./routers/club.router')
 
 const app = express()
 
@@ -16,7 +17,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
 // Public API
-app.use('/v1', districtApi)
+app.use('/v1', districtApi, clubApi)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
