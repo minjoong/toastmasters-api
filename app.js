@@ -2,6 +2,8 @@ const cors = require('cors')
 const createError = require('http-errors')
 const express = require('express')
 const logger = require('morgan')
+// routers
+const districtApi = require('./routers/district.router')
 
 const app = express()
 
@@ -12,6 +14,9 @@ app.use(logger('dev'))
 // Body Parser
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
+
+// Public API
+app.use('/v1', districtApi)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
