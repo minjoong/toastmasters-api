@@ -1,9 +1,12 @@
+var cors = require('cors');
 var createError = require('http-errors');
 var express = require('express');
 var logger = require('morgan');
 
 var app = express();
 
+// CORS 적용
+app.use(cors());
 // Access Logging
 app.use(logger('dev'));
 // Body Parser
