@@ -9,24 +9,37 @@ const mergedClub = async c => {
 
 const clubsOfDistrict = async districtId => {
   const $ = await districtDashboardPage(districtId)
-  const clubs = $('td.Grid_Title_top5.min280.crop').map((i, elem) => {
-    const name = $(elem).attr('title')
-    const id = $(elem).children('span.redFont').text()
-    const divisionAreaId = $(elem).closest('tbody').parent().closest('tbody').attr('id')
-    const division = R.compose(
-      R.replace('division', ''),
-      R.head,
-      R.split('_')
-    )(divisionAreaId)
-    const area = R.compose(
-      R.replace('area', ''),
-      R.nth(1),
-      R.split('_')
-    )(divisionAreaId)
-    const member = Number($(elem).parent().find('td.Grid_Table.title_gray>span').text())
+  const clubs = $('td.Grid_Title_top5.min280.crop')
+    .map((i, elem) => {
+      const name = $(elem).attr('title')
+      const id = $(elem)
+        .children('span.redFont')
+        .text()
+      const divisionAreaId = $(elem)
+        .closest('tbody')
+        .parent()
+        .closest('tbody')
+        .attr('id')
+      const division = R.compose(
+        R.replace('division', ''),
+        R.head,
+        R.split('_')
+      )(divisionAreaId)
+      const area = R.compose(
+        R.replace('area', ''),
+        R.nth(1),
+        R.split('_')
+      )(divisionAreaId)
+      const member = Number(
+        $(elem)
+          .parent()
+          .find('td.Grid_Table.title_gray>span')
+          .text()
+      )
 
-    return {id, name, division, area, member}
-  }).toArray()
+      return { id, name, division, area, member }
+    })
+    .toArray()
 
   const clubsPromises = R.map(mergedClub)(clubs)
 

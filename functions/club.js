@@ -5,7 +5,10 @@ const club = async clubId => {
   try {
     const $ = await findAClubPage(clubId)
     const name = $('div.detailHead h1.title').text()
-    const clubIdentities = R.map(R.trim, R.split(',', $('.info dl:nth-child(1) dd').text()))
+    const clubIdentities = R.map(
+      R.trim,
+      R.split(',', $('.info dl:nth-child(1) dd').text())
+    )
 
     const districtId = R.compose(
       R.last,
@@ -23,41 +26,40 @@ const club = async clubId => {
     const charterDate = $('.info dl:nth-child(2) dd').text()
     const website = $('.info dl:nth-child(3) dt a').attr('href')
     const facebook = $('.contactLinks li:nth-child(1) a').attr('href')
-    const email = R.replace('mailto:', '')($('.contactLinks li:nth-child(2) a').attr('href'))
+    const email = R.replace('mailto:', '')(
+      $('.contactLinks li:nth-child(2) a').attr('href')
+    )
 
-    const phone =
+    const phone = R.compose(
+      R.trim,
+      R.replace('Phone:', '')
+    )($('.contact-info-phone').text())
+
+    const meetingTimes = R.compose(
+      R.trim,
+      R.replace('Meeting Times:', '')
+    )($('.contact-info-meeting-times').text())
+
+    const location = R.map(
       R.compose(
+        R.replace(/\s{2,}/g, ' '),
         R.trim,
-        R.replace('Phone:', '')
-      )($('.contact-info-phone').text())
-
-    const meetingTimes =
-      R.compose(
-        R.trim,
-        R.replace('Meeting Times:', '')
-      )($('.contact-info-meeting-times').text())
-
-    const location =
-      R.map(
-        R.compose(
-          R.replace(/\s{2,}/g, ' '),
-          R.trim,
-          R.replace('Location:', '')
-        )
-      )($('.contact-info-body')
+        R.replace('Location:', '')
+      )
+    )(
+      $('.contact-info-body')
         .contents()
-        .map((i, elem) =>
-          $(elem).text())
-        .toArray())
+        .map((i, elem) => $(elem).text())
+        .toArray()
+    )
 
     const [, , venueLine1, , venueLine2, , address] = location
 
-    const [latitude, longitude] =
-      R.compose(
-        R.map(Number),
-        R.split(','),
-        R.replace('https://maps.google.com/maps?daddr=', '')
-      )($('a:contains("Get Directions")').attr('href'))
+    const [latitude, longitude] = R.compose(
+      R.map(Number),
+      R.split(','),
+      R.replace('https://maps.google.com/maps?daddr=', '')
+    )($('a:contains("Get Directions")').attr('href'))
 
     return {
       id: clubId,
@@ -79,7 +81,7 @@ const club = async clubId => {
     }
   } catch (err) {
     console.error(`error occured in club : ${clubId}`)
-    return {id: clubId}
+    return { id: clubId }
   }
 }
 
