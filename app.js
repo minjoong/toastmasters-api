@@ -8,6 +8,8 @@ const clubApi = require('./routers/club.router')
 
 const app = express()
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
 // CORS 적용
 app.use(cors())
 // Access Logging
